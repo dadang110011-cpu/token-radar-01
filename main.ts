@@ -8,7 +8,7 @@
 //
 // The dashboard is a static page, no framework and no network: dashboard/index.html, dashboard/
 // app.css and dashboard/app.js read /output/data.js, which this program writes from the same
-// board. The board carries every rankable pre-token protocol (289 of them on this snapshot),
+// board. The board carries every rankable pre-token protocol (198 of them on this snapshot),
 // ranked by the model's implied value — not by raw TVL — and each row carries its farm plan.
 //
 // Outside the grader's container, MAKEFUN_OUTPUT_DIR stands in for /output:
