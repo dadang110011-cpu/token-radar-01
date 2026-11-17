@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Token Radar: pre-token protocols ranked by implied value</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<a class="skip" href="#board">Skip to the board</a>
+<header class="top">
+  <div class="wrap">
+    <h1>Token Radar <span class="ver">radar-2</span></h1>
+    <p class="sub">Every pre-token protocol in the sealed snapshot, ranked by what its token would be worth if it launched today — and what to do about each one before it does.</p>
+    <p class="meta" id="meta">Loading the snapshot…</p>
+  </div>
+</header>
+<nav class="tabs wrap" aria-label="Views">
+  <button data-view="board" class="tab active" type="button">Board</button>
+  <button data-view="live" class="tab" type="button">Live tokens</button>
+  <button data-view="model" class="tab" type="button">How the model works</button>
+</nav>
+<main class="wrap" id="board" tabindex="-1" aria-busy="true">
+  <section id="view-board" class="view">
+    <div class="controls" role="search">
+      <label>Search <input id="q" type="search" placeholder="Protocol name or slug…" autocomplete="off"></label>
+      <label>Category <select id="category"><option value="">All categories</option></select></label>
+      <label>Chain <select id="chain"><option value="">All chains</option></select></label>
+      <label>Sort <select id="sort">
+        <option value="rank">Rank (implied value)</option>
+        <option value="tvl">TVL, high to low</option>
+        <option value="growth">7-day growth, high to low</option>
+        <option value="age">Age, oldest first</option>
+        <option value="name">Name, A to Z</option>
+      </select></label>
+      <label class="check"><input id="watchlist-only" type="checkbox"> Watchlist only</label>
+    </div>
+    <p class="count" id="count"></p>
+    <div class="table-wrap">
+      <table id="rows">
+        <thead><tr>
+          <th data-sort="rank">#</th>
+          <th data-sort="name">Protocol</th>
+          <th data-sort="category">Category</th>
+          <th>Chains</th>
+          <th data-sort="tvl">TVL</th>
+          <th data-sort="growth">7d</th>
+          <th data-sort="age">Age</th>
+          <th data-sort="implied">Implied value</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="hint">Click a row for its detail view: the model breakdown and its farm plan. Implied values are this radar's own claim, never a promise a token launches.</p>
+  </section>
+  <section id="view-live" class="view" hidden>
+    <h2>Live tokens — the market's own values</h2>
+    <p class="lede">These protocols already record a token, so the board does not rank them: their market caps are the market's verdict, not a model's. They are here so the pre-token board is never read as the whole universe.</p>
+    <div class="table-wrap">
+      <table id="live-rows">
+        <thead><tr><th>Protocol</th><th>Category</th><th>Chains</th><th>TVL</th><th>Market cap</th><th>7d</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+  <section id="view-model" class="view" hidden>
+    <h2>How the model works</h2>
+    <p class="lede">One formula scores every protocol. Nothing is hardcoded by name: the category weight is read from this snapshot, and the same function scores every row.</p>
+    <div class="formula">
+      <p><strong>implied value</strong> = TVL × 0.25 × growth × maturity × chains × category</p>
+      <ul>
+        <li><strong>Growth</strong> — the 7-day TVL change, clamped to −60%…+150%, weighted 0.5. A hot week lifts value; a cold one trims it; neither dominates.</li>
+        <li><strong>Maturity</strong> — a hump over the days since DefiLlama began tracking the protocol: 0.55 at birth, 1.00 at about 18 months, falling to 0.75 after five years. A protocol that has run for years with no token is discounted, not rewarded, for its age.</li>
+        <li><strong>Chains</strong> — each chain past the first adds 3%, up to 21%. A token launched into many chains reaches more wallets than one launched into one.</li>
+        <li><strong>Category</strong> — 0.85 plus up to 0.30 for the share of this snapshot's protocols in the category that already record a token (smoothed toward the snapshot-wide share). Where tokens are the norm, a pre-token member is likelier to follow.</li>
+      </ul>
+      <p>“Pre-token” means the snapshot records no token for the protocol — no market cap, no CoinGecko id, no symbol. That is the record, not proof: a protocol on the list may still have a token its DefiLlama record does not carry.</p>
+    </div>
+    <h3>Try the model yourself</h3>
+    <p class="lede">Move a slider and the board re-ranks on the same snapshot. The shipped board uses the defaults below.</p>
+    <div class="sandbox" id="sandbox">
+      <label>Base multiple <span id="v-base">0.25</span><input id="s-base" type="range" min="0.1" max="0.5" step="0.01" value="0.25"></label>
+      <label>Growth weight <span id="v-growth">0.50</span><input id="s-growth" type="range" min="0" max="1" step="0.05" value="0.5"></label>
+      <label>Maturity peak, days <span id="v-peak">540</span><input id="s-peak" type="range" min="180" max="1095" step="15" value="540"></label>
+      <label>Chain bonus <span id="v-chain">0.03</span><input id="s-chain" type="range" min="0" max="0.06" step="0.005" value="0.03"></label>
+      <p class="sandbox-note" id="sandbox-note">Defaults — the board below is the shipped ranking.</p>
+    </div>
+  </section>
+  <section id="view-detail" class="view" hidden>
+    <p><a href="#/" class="back">← Back to the board</a></p>
+    <div id="detail"></div>
+  </section>
+</main>
+<footer class="wrap">
+  <p>Data: DefiLlama protocol snapshot, 14 November 2026 (758 protocols, TVL ≥ $5M). Watchlist floor $50M. Implied values are this radar's model, not a prediction that a token launches or what it would trade at. Farm plans are suggestions, not financial advice; never pay to claim an airdrop.</p>
+</footer>
+<script src="../data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
